@@ -35,12 +35,13 @@ namespace SampleAzure
             {
                 try
                 {
-                    PowerShellInstance.AddCommand("Login-AzureRmAccount");
-                    PowerShellInstance.Invoke();
-                 //   PowerShellInstance.AddCommand("Select-AzureSubscription -SubscriptionName 'Microsoft Azure Internal Consumption' ");
-                    //   PowerShellInstance.AddCommand("Get-AzureRmSubscription -SubscriptionName 'Microsoft Azure Internal Consumption' | Select-AzureRmSubscription");
-               //     PowerShellInstance.Invoke();
-                    PowerShellInstance.AddCommand("New-AzureRmResourceGroup -ResourceGroupName '" + ResourceGroup + "' -Location '" + Location + "'");
+                    StringBuilder PowerShellScript = new StringBuilder();
+                    PowerShellScript.Append("Login-AzureRmAccount" + Environment.NewLine);
+                    PowerShellScript.Append("Get-AzureRmSubscription -SubscriptionName 'Test - Microsoft Azure Internal Consumption' | Select-AzureRmSubscription" + Environment.NewLine);
+                    PowerShellScript.Append("New-AzureRmResourceGroup -ResourceGroupName '" + ResourceGroup + "' -Location '" + Location + "'" + Environment.NewLine);
+                    PowerShellScript.Append("New-AzureRmAppServicePlan -Name '" + AppServicePlan + "' -Location '" + Location + "' -Tier Free -ResourceGroupName '" + ResourceGroup + "'" + Environment.NewLine);
+                    PowerShellScript.Append("New-AzureRmWebApp -ResourceGroupName '" + ResourceGroup + "' -Name '" + WebAppName + "' -AppServicePlan '" + AppServicePlan + "' -Location '" + Location + "'");
+                    PowerShellInstance.AddScript(PowerShellScript.ToString());
                     PowerShellInstance.Invoke();
                     Response.Write("<H1>Webapp Successfully Created</H1>");
                 }
